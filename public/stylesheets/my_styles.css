@@ -1,0 +1,36 @@
+
+/*for the fixed navbar*/
+body {
+  padding-top: 70px;
+}
+
+/*for the header text*/
+.entry-text {
+  font-family: 'Julius Sans One', sans-serif;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+/*for the avatars*/
+.av-style {
+   border: 1px dotted #555555;
+}
+
+/*for icon links*/
+a.iconlink{
+  text-decoration: none;
+}
+
+/*for the comments*/
+.floatright { float:right;
+}
+
+/*for spacing issues*/
+.space10 { margin-bottom:10px; }
+.space10b { margin-bottom:10px; }
+.space20 { margin-bottom:20px; }
+.hspace5 { margin-right:5px; }
+.hspace10 { margin-right: 10px; }
+.space5t { margin-top:5px; }
+.space20t { margin-top:20px; }
+.hspace5l { margin-left:5px; }

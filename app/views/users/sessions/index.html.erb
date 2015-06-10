@@ -1,0 +1,85 @@
+<div class="container">
+  <div class="row">
+
+    <!-- sidebar -->
+    <div class="col-md-3 space20">
+      <%= image_tag @user.avatar.url(:medium), :class => "img-circle center-block av-style" %>
+
+      <h4 class="text-center"><%= @user.first_name %> <%= @user.last_name %></h4>
+      <h5 class="text-center"><%= @building.name %></h5>
+
+      <dl>
+        <dt>Resident Since:</dt>
+        <dd class="space10"><%= @user.resident_since %></dd>
+
+        <dt>Occupation:</dt>
+        <dd class="space10"><%= @user.occupation %></dd>
+
+        <dt>Interests:</dt>
+        <dd class="space10"><%= @user.interests %></dd>
+
+        <dt>Posts:</dt>
+        <dd class="space10"><%= @posts.count %></dd>
+
+      </dl>
+
+    </div>
+
+    <!-- posts -->
+    <div class="col-md-6">
+      <!-- post body -->
+      <% @posts.each do |post| %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+        <!-- heading -->
+          <div class="media">
+            <div class="media-left media-middle">
+              <a href="/users/<%= User.find(post.user_id).id %>">
+                <%= image_tag User.find(post.user_id).avatar.url(:thumb), :class => "media-object img-circle av-style" %>
+              </a>
+            </div>
+            <div class="media-body">
+              <h5>
+                <a href="/users/<%= User.find(post.user_id).id %>"><%= User.find(post.user_id).first_name %></a> in <a href="#"><%= Building.find(post.building_id).name %></a>
+                <span class="pull-right">
+                  <% if current_user.id == post.user_id  %>
+                  <a href="/buildings/<%= post.building_id %>/posts/<%= post.id %>/edit" class="iconlink">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a href="/buildings/<%= post.building_id %>/delete_post/<%= post.id %>" rel="nofollow" class="iconlink">
+                    <i class="fa fa-trash-o"></i>
+                  </a>
+                  <% end %>
+                </span>
+                <p class="space5t"><%= post.created_at.strftime("%b %d, %Y")%> at <%= post.created_at.strftime("%-I:%M%p")%></p>
+              </h5>
+            </div>
+          </div>
+
+        <!-- entry -->
+        <h4><%= post.subject %></h4>
+        <p><%= post.content %></p>
+        </div>
+
+        <div class="panel-footer">
+          <span class="glyphicon glyphicon-tags hspace5" aria-hidden="true"></span>
+              <a href="../buildings/<%= post.building_id %>/<%= post.post_type.downcase.gsub(" ","_") %>"><%= post.post_type %></a>
+
+          <span class="pull-right">
+            <a href="/buildings/<%= post.building_id %>/posts/<%= post.id %>"><%= post.comments.count %> comments</a>
+          </span>
+
+        </div>
+      </div>
+      <% end %>
+
+      <!-- pagination -->
+      <div>
+        <center><%= will_paginate(@posts) %></center>
+      </div>
+
+    </div>
+
+  </div>
+</div>

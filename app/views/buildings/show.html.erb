@@ -1,0 +1,120 @@
+<div class="container">
+  <div class="row">
+
+    <!-- sidebar -->
+    <div class="col-md-3 space20">
+      <%= image_tag current_user.avatar.url(:medium), :class => "img-circle center-block av-style" %>
+
+      <h4 class="text-center"><%= current_user.first_name %> <%= current_user.last_name %></h4>
+      <h5 class="text-center"><%= @building.name %></h5>
+
+
+      <a href="/buildings/<%= @building.id %>/residents" class="list-group-item"><span class="glyphicon glyphicon-user hspace10" aria-hidden="true"></span>Neighbors</a>
+      <a href="/buildings/<%= @building.id %>/event" class="list-group-item"><span class="glyphicon glyphicon-calendar hspace10" aria-hidden="true"></span>Events</a>
+      <a href="/buildings/<%= @building.id %>/local_news" class="list-group-item"><span class="glyphicon glyphicon-leaf hspace10" aria-hidden="true"></span>Local</a>
+      <a href="/buildings/<%= @building.id %>/classified" class="list-group-item"><span class="glyphicon glyphicon-shopping-cart hspace10" aria-hidden="true"></span>Classifieds</a>
+      <a href="/buildings/<%= @building.id %>/odd_job" class="list-group-item"><span class="glyphicon glyphicon-wrench hspace10" aria-hidden="true"></span> Odd Jobs</a>
+      <a href="/" class="list-group-item"><span class="glyphicon glyphicon-th hspace10" aria-hidden="true"></span> All Posts</a>
+
+    </div>
+
+    <!-- posts -->
+    <div class="col-md-6">
+
+    <% if params[:post_mess] != nil %>
+      <% params[:post_mess].each do |message| %>
+        <div class="alert alert-dismissable alert-danger">
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+          <%= message %>
+        </div>
+      <% end %>
+    <% end %>
+
+      <!-- add post -->
+      <div class="btn-group btn-block space20">
+        <button type="button" class="btn btn-default btn-block" data-toggle="collapse" data-target="#form_collapse" aria-expanded="false" aria-controls="form_collapse">
+          <center><i class="fa fa-plus"></i></center>
+        </button>
+      </div>
+
+      <div class="collapse" id="form_collapse">
+        <div class="well">
+
+          <%= form_for @post, :url => "/buildings/#{@building.id}/create_post" do |f| %>
+
+            <div class="form-group">
+              <%= f.text_field :subject, :class => "form-control", :placeholder => "Subject" %>
+            </div>
+
+            <div class="form-group">
+              <%= f.select :post_type, options_for_select([['Local News'], ['Event'], ['Odd Job'], ['Classified']]), {}, { :class => "form-control" } %>
+            </div>
+
+            <div class="form-group">
+              <%= f.text_area :content, :rows => 4, :class => "form-control" %>
+            </div>
+
+            <div class="actions">
+              <%= f.submit "Post", :class => "btn btn-primary btn-block" %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
+      <!-- post body -->
+      <% @posts.each do |post| %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+        <!-- heading -->
+          <div class="media">
+            <div class="media-left media-middle">
+              <a href="/users/<%= User.find(post.user_id).id %>">
+                <%= image_tag User.find(post.user_id).avatar.url(:thumb), :class => "media-object img-circle av-style" %>
+              </a>
+            </div>
+            <div class="media-body">
+              <h5>
+                <a href="/users/<%= User.find(post.user_id).id %>"><%= User.find(post.user_id).first_name %></a> in <a href="#"><%= Building.find(post.building_id).name %></a>
+                <span class="pull-right">
+                  <% if current_user.id == post.user_id  %>
+                  <a href="/buildings/<%= post.building_id %>/posts/<%= post.id %>/edit" class="iconlink">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a href="/buildings/<%= post.building_id %>/delete_post/<%= post.id %>" rel="nofollow" class="iconlink">
+                    <i class="fa fa-trash-o"></i>
+                  </a>
+                  <% end %>
+                </span>
+                <p class="space5t"><%= post.created_at.strftime("%b %d, %Y")%> at <%= post.created_at.strftime("%-I:%M%p")%></p>
+              </h5>
+            </div>
+          </div>
+
+        <!-- entry -->
+        <h4><%= post.subject %></h4>
+        <p><%= post.content %></p>
+        </div>
+
+        <div class="panel-footer">
+          <span class="glyphicon glyphicon-tags hspace5" aria-hidden="true"></span>
+              <a href="/buildings/<%= post.building_id %>/<%= post.post_type.downcase.gsub(" ","_") %>"><%= post.post_type %></a>
+
+          <span class="pull-right">
+            <a href="/buildings/<%= post.building_id %>/posts/<%= post.id %>"><%= post.comments.count %> comments</a>
+          </span>
+
+        </div>
+      </div>
+      <% end %>
+
+      <!-- pagination -->
+      <div>
+        <center><%= will_paginate(@posts) %></center>
+      </div>
+
+    </div>
+
+  </div>
+</div>

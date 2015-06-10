@@ -1,0 +1,35 @@
+<div class="container">
+  <div class="row">
+
+    <!-- sidebar -->
+    <div class="col-md-3 space20">
+      <%= image_tag current_user.avatar.url(:medium), :class => "img-circle center-block av-style" %>
+
+      <h4 class="text-center"><%= current_user.first_name %> <%= current_user.last_name %></h4>
+      <h5 class="text-center"><%= @building.name %></h5>
+
+      <a href="/buildings/<%= @building.id %>/residents" class="list-group-item"><span class="glyphicon glyphicon-user hspace10" aria-hidden="true"></span>Neighbors</a>
+      <% if current_user.id == @building.admin_id %>
+      <a href="/buildings/<%= current_user.building_id %>/pending" class="list-group-item"><span class="glyphicon glyphicon-time hspace10" aria-hidden="true"></span> Pending Requests</a>
+      <% end  %>
+      <a href="/buildings/<%= @building.id %>/event" class="list-group-item"><span class="glyphicon glyphicon-calendar hspace10" aria-hidden="true"></span>Events</a>
+      <a href="/buildings/<%= @building.id %>/local_news" class="list-group-item"><span class="glyphicon glyphicon-leaf hspace10" aria-hidden="true"></span>Local</a>
+      <a href="/buildings/<%= @building.id %>/classified" class="list-group-item"><span class="glyphicon glyphicon-shopping-cart hspace10" aria-hidden="true"></span>Classifieds</a>
+      <a href="/buildings/<%= @building.id %>/odd_job" class="list-group-item"><span class="glyphicon glyphicon-wrench hspace10" aria-hidden="true"></span> Odd Jobs</a>
+      <a href="/" class="list-group-item"><span class="glyphicon glyphicon-th hspace10" aria-hidden="true"></span> All Posts</a>
+
+    </div>
+
+    <div class="col-md-6">
+      <% @users.each do |user| %>
+          <a href="/users/<%= user.id %>"><%= image_tag user.avatar.url(:medium), :class => "img-circle av-style space10 hspace10", :title => "#{user.first_name} #{user.last_name}" %></a>
+      <% end %>
+
+      <!-- pagination -->
+      <div>
+        <center><%= will_paginate(@users) %></center>
+      </div>
+
+    </div>
+  </div>
+</div>

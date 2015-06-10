@@ -1,0 +1,86 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+
+      <div class="panel panel-default">
+        <div class="panel-body">
+
+        <!-- heading -->
+          <div class="media">
+            <div class="media-left media-middle">
+              <a href="/users/<%= User.find(@post.user_id).id %>">
+                <%= image_tag User.find(@post.user_id).avatar.url(:thumb), :class => "media-object img-circle av-style" %>
+              </a>
+            </div>
+            <div class="media-body">
+              <h5>
+                <a href="#"><%= User.find(@post.user_id).first_name %></a> in <a href="#"><%= Building.find(@post.building_id).name %></a>
+                <span class="pull-right">
+                  <% if current_user.id == @post.user_id %>
+                  <a href="/buildings/<%= @post.building_id %>/posts/<%= @post.id %>/edit" class="iconlink">
+                    <i class="fa fa-edit"></i>
+                  </a>
+                  <a href="/buildings/<%= @post.building_id %>/delete_post/<%= @post.id %>" rel="nofollow" class="iconlink">
+                    <i class="fa fa-trash-o"></i>
+                  </a>
+                  <% end %>
+                </span>
+                <p class="space5t"><%= @post.created_at.strftime("%b %d, %Y")%> at <%= @post.created_at.strftime("%-I:%M%p")%></p>
+              </h5>
+            </div>
+          </div>
+
+        <!-- entry -->
+        <h4><%= @post.subject %></h4>
+        <p><%= @post.content %></p>
+        </div>
+
+        <ul class="list-group">
+          <li class="list-group-item"><strong>Comments <span class="badge"><%= @comments.count %></span></strong></li>
+          <% @comments.each do |comment| %>
+          <li class="list-group-item">
+            <strong><a href="/users/<%= User.find_by({ id: comment.user_id}).id %>"><%= User.find_by({ id: comment.user_id}).first_name %></a></strong>: <%= comment.content %>
+
+            <% if current_user.id == comment.user_id %>
+              <span class="floatright">
+              <a href="/buildings/<%= comment.building_id %>/posts/<%= comment.post_id %>/comments/<%= comment.id %>/edit" class="iconlink">
+                <i class="fa fa-edit"></i>
+              </a>
+              <a href="/buildings/<%= comment.building_id %>/posts/<%= comment.post_id %>/delete_comment/<%= comment.id %>" rel="nofollow" class="iconlink">
+                <i class="fa fa-trash-o"></i>
+              </a>
+              </span>
+            <% end %>
+
+
+          </li>
+          <% end %>
+          <li class="list-group-item">
+
+          <% if params[:comm_mess] != nil %>
+              <% params[:comm_mess].each do |message| %>
+                <div class="alert alert-dismissable alert-danger">
+                  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                  <%= message %>
+                </div>
+              <% end %>
+            <% end %>
+
+            <%= form_for @comment, :url => "/buildings/#{@post.building_id}/posts/#{@post.id}/create_comment" do |f| %>
+              <div class="form-group">
+                <%= f.text_area :content, :rows => 4, :class => "form-control" %>
+              </div>
+
+              <div class="actions">
+                <%= f.submit "Comment", :class => "btn btn-primary btn-block" %>
+              </div>
+            <% end %>
+          </li>
+        </ul>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
